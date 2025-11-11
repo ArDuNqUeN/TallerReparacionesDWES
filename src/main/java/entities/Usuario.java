@@ -47,6 +47,11 @@ public class Usuario {
 	public void setDniUsuario(String dniUsuario) {
 		this.dniUsuario = dniUsuario;
 	}
+	@Override
+	public String toString() {
+		return "Usuario [id_usuario=" + id_usuario + ", nombreUsuario=" + nombreUsuario + ", password=" + password
+				+ ", rol=" + rol + ", dniUsuario=" + dniUsuario + "]";
+	}
 	
 	
 }

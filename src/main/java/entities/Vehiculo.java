@@ -38,6 +38,11 @@ public class Vehiculo {
 	public void setModelo(String modelo) {
 		this.modelo = modelo;
 	}
+	@Override
+	public String toString() {
+		return "Vehiculo [id_vehiculo=" + id_vehiculo + ", matricula=" + matricula + ", marca=" + marca + ", modelo="
+				+ modelo + "]";
+	}
 	
 	
 }

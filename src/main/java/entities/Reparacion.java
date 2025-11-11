@@ -69,6 +69,14 @@ public class Reparacion {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Reparacion [id_reparacion=" + id_reparacion + ", descripcion=" + descripcion + ", fechaEntrada="
+				+ fechaEntrada + ", costeEstimado=" + costeEstimado + ", estado=" + estado + "]";
+	}
+	
 	
 	
 	
