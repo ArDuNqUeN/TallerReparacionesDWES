@@ -1,6 +1,7 @@
 package entities;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Reparacion {
 
@@ -19,6 +20,9 @@ public class Reparacion {
 		this.costeEstimado = costeEstimado;
 		this.estado = estado;
 	}
+
+
+
 
 
 	public int getId_reparacion() {

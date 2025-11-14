@@ -2,6 +2,8 @@ package vista;
 
 import java.util.Scanner;
 
+import controlador.ControladorTaller;
+
 public class VistaTaller {
 public static void main(String[] args) {
 	Scanner sc = new Scanner(System.in);
@@ -13,10 +15,9 @@ public static void main(String[] args) {
 
          switch (opcion) {
              case 1:
-                 iniciarSesion(sc);
+                 ControladorTaller.login(null, null);
                  break;
              case 2:
-                verReparacionesFinalizadas();
                  break;
              default:
                  System.out.println("Opción no válida. Inténtalo de nuevo.");
