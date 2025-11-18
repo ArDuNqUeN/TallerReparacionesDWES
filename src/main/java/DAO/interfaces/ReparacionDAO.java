@@ -10,5 +10,5 @@ public interface ReparacionDAO {
     List<Reparacion> obtenerTodas();
     boolean actualizarReparacion(Reparacion reparacion);
     boolean eliminarReparacion(int id);
-    boolean cambiarEstado(int id, Reparacion estado);
+    boolean cambiarEstado(int id, Reparacion.Estado estado);
 }

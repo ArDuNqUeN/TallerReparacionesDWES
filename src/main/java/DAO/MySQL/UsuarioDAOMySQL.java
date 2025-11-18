@@ -12,7 +12,7 @@ public class UsuarioDAOMySQL implements UsuarioDAO, AutoCloseable{
 
 	private Connection conn;
 	
-	public void UsuarioDAOMySQL()throws SQLException{
+	public  UsuarioDAOMySQL()throws SQLException{
 		conn= DBConnection.getInstance().getConnection();
 	}
 	

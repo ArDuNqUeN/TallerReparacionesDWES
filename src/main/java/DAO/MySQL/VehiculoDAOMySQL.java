@@ -10,28 +10,28 @@ import DAO.DBConnection;
 import DAO.interfaces.VehiculoDAO;
 import entities.Vehiculo;
 
-public class VehiculoDOAMySQL implements VehiculoDAO, AutoCloseable{
+public class VehiculoDAOMySQL implements VehiculoDAO, AutoCloseable{
 private Connection conn;
 
-public void VehiculoDAOMySQL() throws SQLException{
+	public  VehiculoDAOMySQL() throws SQLException{
 	conn = DBConnection.getInstance().getConnection();
 }
 	
 	
 	@Override
-	public int insertarVehiculo(Vehiculo vehiculo) {
+	public void insertarVehiculo(Vehiculo vehiculo) throws SQLException {
 		int rc=0;
 		String sql = "INSERT INTO Vehiculo (matricula, marca, modelo, id_cliente) VALUES (?, ?, ?, ?)";
-		try {
+		
 			PreparedStatement pst=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			
 			 pst.setString(1, vehiculo.getMatricula());
 	         pst.setString(2, vehiculo.getMarca());
 	         pst.setString(3, vehiculo.getModelo());
 	         pst.setInt(4, vehiculo.getIdCliente());
-		}
+			 return;
 		
-return false;
+		
 	}
 
 	@Override

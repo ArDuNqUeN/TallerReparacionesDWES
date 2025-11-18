@@ -1,6 +1,7 @@
 package controlador;
 
 import java.awt.List;
+
 import DAO.impl.ClienteDAOImpl;
 import DAO.impl.ReparacionDAOImpl;
 import DAO.impl.UsuarioDAOImpl;
@@ -53,15 +54,15 @@ public class ControladorTaller {
 	        return usuarioActual;
 	    }
 
-//	    // CLIENTES
-//	    public List<Cliente> listarClientes() {
-//	        return clienteDAO.obtenerTodos();
-//	    }
-//
-//	    public boolean insertarCliente(Cliente c) {
-//	        return clienteDAO.insertarCliente(c);
-//	    }
-//
+	    // CLIENTES
+	    public List listarClientes() {
+	        return (List) clienteDAO.obtenerTodos();
+	    }
+
+	    public boolean insertarCliente(Cliente c) {
+	        return clienteDAO.insertarCliente(c);
+	    }
+
 //	    // REPARACIONES
 //	    public boolean registrarReparacion(Reparacion r) {
 //	        return reparacionDAO.insertarReparacion(r);

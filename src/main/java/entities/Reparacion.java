@@ -9,10 +9,10 @@ public class Reparacion {
 	private String descripcion;
 	private Date fechaEntrada;
 	private double costeEstimado;
-	private String estado;
+	private Estado estado;
 	
 	
-	public Reparacion(int id_reparacion, String descripcion, Date fechaEntrega, double costeEstimado, String estado) {
+	public Reparacion(int id_reparacion, String descripcion, Date fechaEntrega, double costeEstimado, Estado estado) {
 		super();
 		this.id_reparacion = id_reparacion;
 		this.descripcion = descripcion;
@@ -65,12 +65,12 @@ public class Reparacion {
 	}
 
 
-	public String getEstado() {
+	public Estado getEstado() {
 		return estado;
 	}
 
 
-	public void setEstado(String estado) {
+	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
 

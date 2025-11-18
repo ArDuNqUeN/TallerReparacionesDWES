@@ -11,10 +11,10 @@ public class ReparacionDAOMySQL implements ReparacionDAO, AutoCloseable{
 
 	private Connection conn;
 	
-	public void ReparacionDAOMySQL()throws SQLException{
+	public ReparacionDAOMySQL()throws SQLException{
 		conn=DBConnection.getInstance().getConnection();
 	}
-	
+
 	@Override
 	public void close() throws Exception {
 		// TODO Auto-generated method stub
@@ -50,12 +50,8 @@ public class ReparacionDAOMySQL implements ReparacionDAO, AutoCloseable{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public boolean cambiarEstado(int id, Reparacion estado) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
+	
 
         
 
