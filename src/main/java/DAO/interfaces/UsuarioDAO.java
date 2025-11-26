@@ -11,5 +11,6 @@ public interface UsuarioDAO {
     boolean actualizarUsuario(Usuario usuario);
     boolean eliminarUsuario(int id);
     Usuario login(String nombre, String contrasena);
+
 }
 
