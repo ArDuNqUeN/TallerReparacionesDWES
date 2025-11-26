@@ -15,6 +15,7 @@ import entities.Reparacion;
 import entities.Usuario;
 
 public class ControladorTaller {
+	
 
 	private static ControladorTaller instancia;
 	private Usuario usuarioActual; 

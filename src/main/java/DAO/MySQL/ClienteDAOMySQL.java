@@ -24,26 +24,26 @@ public class ClienteDAOMySQL implements ClienteDAO, AutoCloseable{
 	    }
 
 	    @Override
-	    public boolean insertarCliente(Cliente c) {
-	        String sql = "INSERT INTO Cliente (nombre, email, dni) VALUES (?, ?, ?)";
+	    public  void insertarCliente(Cliente c) {
+	        String sql = "INSERT INTO Cliente (id, nombre, email, dni) VALUES (?, ?, ?, ?)";
 	        try (PreparedStatement pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-	            pst.setString(1, c.getNombre());
-	            pst.setString(2, c.getEmail());
-	            pst.setString(3, c.getDni());
+	            pst.setInt(1, 1);
+	        	pst.setString(2, "Aidan");
+	            pst.setString(3, "lolita18@hotmail.com");
+	            pst.setString(4, "12345678Z");
 
-	            int filas = pst.executeUpdate();
-	            if (filas > 0) {
-	                try (ResultSet rs = pst.getGeneratedKeys()) {
-	                    if (rs.next()) {
-	                        c.setId_cliente(rs.getInt(1));
-	                    }
-	                }
-	                return true;
-	            }
+//	            int filas = pst.executeUpdate();
+//	            if (filas > 0) {
+////	                try (ResultSet rs = pst.getGeneratedKeys()) {
+//////	                    if (rs.next()) {
+//////	                        c.setId_cliente(rs.getInt(1));
+//////	                    }
+////	                }
+//	                return true;
+//	            }
 	        } catch (SQLException e) {
 	            System.err.println("Error al insertar cliente: " + e.getMessage());
 	        }
-	        return false;
 	    }
 
 	    @Override
