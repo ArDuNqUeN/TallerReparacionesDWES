@@ -1,5 +1,6 @@
 package DAO.impl;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,41 +16,50 @@ import entities.Vehiculo;
 public class VehiculoDAOImpl implements VehiculoDAO {
 
     @Override
-    public boolean insertarVehiculo(Vehiculo vehiculo) throws SQLException {
-        String sql = "INSERT INTO vehiculo (matricula, marca, modelo, dni_cliente) VALUES (?, ?, ?, ?)";
+    public boolean insertarVehiculo(Vehiculo vehiculo) {
+        String sql = "INSERT INTO vehiculo (matricula, marca, modelo, id_cliente) VALUES (?, ?, ?, ?)";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, vehiculo.getMatricula());
             stmt.setString(2, vehiculo.getMarca());
             stmt.setString(3, vehiculo.getModelo());
-            stmt.setString(4, vehiculo.getDniCliente());
+            stmt.setInt(4, vehiculo.getIdCliente());
 
-            return stmt.executeUpdate() > 0;
+            int filas = stmt.executeUpdate();
+            return filas > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error insertando vehículo: " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public Vehiculo obtenerVehiculoPorMatricula(String matricula) {
-        String sql = "SELECT * FROM vehiculo WHERE matricula=?";
+    public Vehiculo obtenerVehiculoPorId(int id) {
+        String sql = "SELECT * FROM vehiculo WHERE id=?";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, matricula);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 return new Vehiculo(
+                        rs.getInt("id"),
                         rs.getString("matricula"),
                         rs.getString("marca"),
                         rs.getString("modelo"),
-                        rs.getString("dni_cliente")
+                        rs.getInt("id_cliente")
                 );
             }
 
         } catch (SQLException e) {
             System.out.println("Error buscando vehículo: " + e.getMessage());
         }
+
         return null;
     }
 
@@ -64,31 +74,37 @@ public class VehiculoDAOImpl implements VehiculoDAO {
 
             while (rs.next()) {
                 lista.add(new Vehiculo(
+                        rs.getInt("id"),
                         rs.getString("matricula"),
                         rs.getString("marca"),
                         rs.getString("modelo"),
-                        rs.getString("dni_cliente")
+                        rs.getInt("id_cliente")
                 ));
             }
 
         } catch (SQLException e) {
             System.out.println("Error listando vehículos: " + e.getMessage());
         }
+
         return lista;
     }
 
     @Override
     public boolean actualizarVehiculo(Vehiculo vehiculo) {
-        String sql = "UPDATE vehiculo SET marca=?, modelo=?, dni_cliente=? WHERE matricula=?";
+        String sql = "UPDATE vehiculo SET matricula=?, marca=?, modelo=?, id_cliente=? WHERE id=?";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, vehiculo.getMarca());
-            stmt.setString(2, vehiculo.getModelo());
-            stmt.setString(3, vehiculo.getDniCliente());
-            stmt.setString(4, vehiculo.getMatricula());
+            stmt.setString(1, vehiculo.getMatricula());
+            stmt.setString(2, vehiculo.getMarca());
+            stmt.setString(3, vehiculo.getModelo());
+            stmt.setInt(4, vehiculo.getIdCliente());
+            stmt.setInt(5, vehiculo.getId());
 
-            return stmt.executeUpdate() > 0;
+            int filas = stmt.executeUpdate();
+            return filas > 0;
+
         } catch (SQLException e) {
             System.out.println("Error actualizando vehículo: " + e.getMessage());
             return false;
@@ -96,13 +112,16 @@ public class VehiculoDAOImpl implements VehiculoDAO {
     }
 
     @Override
-    public boolean eliminarVehiculo(String matricula) {
-        String sql = "DELETE FROM vehiculo WHERE matricula=?";
+    public boolean eliminarVehiculo(int id) {
+        String sql = "DELETE FROM vehiculo WHERE id=?";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, matricula);
-            return stmt.executeUpdate() > 0;
+            stmt.setInt(1, id);
+            int filas = stmt.executeUpdate();
+            return filas > 0;
+
         } catch (SQLException e) {
             System.out.println("Error eliminando vehículo: " + e.getMessage());
             return false;

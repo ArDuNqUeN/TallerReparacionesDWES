@@ -1,141 +1,149 @@
 package DAO.impl;
+
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import DAO.DBConnection;
 import DAO.interfaces.ReparacionDAO;
+import entities.Estado;
 import entities.Reparacion;
 
 public class ReparacionDAOImpl implements ReparacionDAO {
 
     @Override
     public boolean insertarReparacion(Reparacion reparacion) {
-        String sql = "INSERT INTO reparacion (id_vehiculo, descripcion, fecha_entrada, coste_estimado, estado) VALUES (?, ?, ?, ?, ?)";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, reparacion.getId_reparacion());
-            stmt.setString(2, reparacion.getDescripcion());
-            stmt.setDate(3, reparacion.getFechaEntrega());
-            stmt.setDouble(4, reparacion.getCosteEstimado());
-            stmt.setString(5, reparacion.getEstado());
-
-            int filas = stmt.executeUpdate();
-            return filas > 0;
-
+        String sql = "INSERT INTO reparaciones (matricula, descripcion, fechaEntrada, costeEstimado, estado) VALUES (?, ?, ?, ?, ?)";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, reparacion.getMatriculaV());
+            ps.setString(2, reparacion.getDescripcion());
+            ps.setDate(3, reparacion.getFechaEntrada());
+            ps.setDouble(4, reparacion.getCosteEstimado());
+            ps.setString(5, reparacion.getEstado().name());
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error insertando reparación: " + e.getMessage());
+            System.err.println("Error al insertar reparación: " + e.getMessage());
             return false;
         }
-    }
-
-    @Override
-    public Reparacion obtenerReparacionPorId(int id) {
-        String sql = "SELECT * FROM reparacion WHERE id=?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return new Reparacion(
-                		 rs.getInt("id_raparacion"),
-                         rs.getString("descripcion"),
-                         rs.getDate("fecha_entrada"),
-                         rs.getDouble("coste_estimado"),
-                         rs.getString("estado")
-                );
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error buscando reparación: " + e.getMessage());
-        }
-
-        return null;
     }
 
     @Override
     public List<Reparacion> obtenerTodas() {
-        List<Reparacion> lista = new ArrayList<>();
-        String sql = "SELECT * FROM reparacion";
-
-        try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+        List<Reparacion> reparaciones = new ArrayList<>();
+        String sql = "SELECT * FROM reparaciones";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                lista.add(new Reparacion(
-                        rs.getInt("id_raparacion"),
+                Reparacion r = new Reparacion(
+                        rs.getString("matricula"),
                         rs.getString("descripcion"),
-                        rs.getDate("fecha_entrada"),
-                        rs.getDouble("coste_estimado"),
-                        rs.getString("estado")
-                        
-                ));
+                        rs.getDate("fechaEntrada"),
+                        rs.getDouble("costeEstimado"),
+                        Estado.valueOf(rs.getString("estado"))
+                );
+                reparaciones.add(r);
             }
-
         } catch (SQLException e) {
-            System.out.println("Error listando reparaciones: " + e.getMessage());
+            System.err.println("Error al obtener reparaciones: " + e.getMessage());
         }
-
-        return lista;
+        return reparaciones;
     }
 
     @Override
-    public boolean actualizarReparacion(Reparacion reparacion) {
-        String sql = "UPDATE reparacion SET id_vehiculo=?, descripcion=?, fecha_entrada=?, coste_estimado=?, estado=? WHERE id=?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-        	stmt.setInt(1, reparacion.getId_reparacion());
-            stmt.setString(2, reparacion.getDescripcion());
-            stmt.setDate(3, reparacion.getFechaEntrega());
-            stmt.setDouble(4, reparacion.getCosteEstimado());
-            stmt.setString(5, reparacion.getEstado());
-
-            int filas = stmt.executeUpdate();
-            return filas > 0;
-
+    public List<Reparacion> obtenerReparacionPorMatricula(String matricula) {
+        List<Reparacion> reparaciones = new ArrayList<>();
+        String sql = "SELECT * FROM reparaciones WHERE matricula = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, matricula);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Reparacion r = new Reparacion(
+                        rs.getString("matricula"),
+                        rs.getString("descripcion"),
+                        rs.getDate("fechaEntrada"),
+                        rs.getDouble("costeEstimado"),
+                        Estado.valueOf(rs.getString("estado"))
+                );
+                reparaciones.add(r);
+            }
         } catch (SQLException e) {
-            System.out.println("Error actualizando reparación: " + e.getMessage());
+            System.err.println("Error al obtener reparaciones por matrícula: " + e.getMessage());
+        }
+        return reparaciones;
+    }
+
+    @Override
+    public List<Reparacion> obtenerReparacionPorDni(String dniCliente) {
+        List<Reparacion> reparaciones = new ArrayList<>();
+        String sql = "SELECT r.* FROM reparaciones r JOIN vehiculos v ON r.matricula = v.matricula WHERE v.id_cliente = ?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, dniCliente);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Reparacion r = new Reparacion(
+                        rs.getString("matricula"),
+                        rs.getString("descripcion"),
+                        rs.getDate("fechaEntrada"),
+                        rs.getDouble("costeEstimado"),
+                        Estado.valueOf(rs.getString("estado"))
+                );
+                reparaciones.add(r);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener reparaciones por DNI: " + e.getMessage());
+        }
+        return reparaciones;
+    }
+
+    @Override
+    public boolean actualizarReparacion(Reparacion reparacion, String matricula) {
+        String sql = "UPDATE reparaciones SET descripcion=?, fechaEntrada=?, costeEstimado=?, estado=? WHERE matricula=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, reparacion.getDescripcion());
+            ps.setDate(2, reparacion.getFechaEntrada());
+            ps.setDouble(3, reparacion.getCosteEstimado());
+            ps.setString(4, reparacion.getEstado().name());
+            ps.setString(5, matricula);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar reparación: " + e.getMessage());
             return false;
         }
     }
 
     @Override
-    public boolean eliminarReparacion(int id) {
-        String sql = "DELETE FROM reparacion WHERE id=?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            int filas = stmt.executeUpdate();
-            return filas > 0;
-
+    public boolean eliminarReparacion(String matricula) {
+        String sql = "DELETE FROM reparaciones WHERE matricula=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, matricula);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error eliminando reparación: " + e.getMessage());
+            System.err.println("Error al eliminar reparación: " + e.getMessage());
             return false;
         }
     }
 
- 
-
-	@Override
-	public boolean cambiarEstado(int id, Reparacion estado) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean cambiarEstado(int filaId, Estado nuevoEstado) {
+        // Como no usamos id numérico, este método puede delegar a actualizarReparacion
+        Reparacion r = obtenerTodas().stream()
+                .filter(rep -> rep.getMatriculaV().equals(String.valueOf(filaId))) // si quieres, se podría adaptar
+                .findFirst()
+                .orElse(null);
+        if (r != null) {
+            r.setEstado(nuevoEstado);
+            return actualizarReparacion(r, r.getMatriculaV());
+        }
+        return false;
+    }
 }
-
 

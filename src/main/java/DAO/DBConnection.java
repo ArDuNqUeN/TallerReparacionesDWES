@@ -1,59 +1,61 @@
 package DAO;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 public class DBConnection {
-	
-	private static DBConnection instance;
-	
-	Connection conexionMySQL = null;
-	private DBConnection() {
-		try {
-			// Instanciar un datasource con mysql para que nos devuelva una conexion
 
-			// 1.1 Pasarle las propiedades a pelo
-			MysqlDataSource dataSource = new MysqlDataSource();
-			dataSource.setServerName("localhost");
-			dataSource.setPortNumber(3306);
-			dataSource.setDatabaseName("tallerreparaciones");
-			dataSource.setUser("root");
-			dataSource.setPassword("root");
+    private static DBConnection instance;
+    private static MysqlDataSource dataSource;
 
-			// 1.2 Hacer con un FileInputStream
-			Properties props = new Properties();
-			FileInputStream file = new FileInputStream("src\\main\\resources\\conexion.properties");
-			props.load(file);
+    private DBConnection() {
+        try {
+            // Cargar propiedades desde el classpath
+            Properties props = new Properties();
+            InputStream is = getClass().getClassLoader().getResourceAsStream("conexion.properties");
+            if (is == null) {
+                throw new RuntimeException("No se encontró el fichero conexion.properties en resources");
+            }
+            props.load(is);
 
-			dataSource.setUrl(props.getProperty("url"));
-			dataSource.setUser(props.getProperty("user"));
-			dataSource.setPassword(props.getProperty("password"));
-			file.close();
+            // Configurar DataSource
+            dataSource = new MysqlDataSource();
+            dataSource.setUrl(props.getProperty("db.url"));
+            dataSource.setUser(props.getProperty("db.user"));
+            dataSource.setPassword(props.getProperty("db.pass"));
 
-			// 1.3 Cargar manualmente el driver (NO ACONSEJADO)
-//			Class.forName("com.mysql.cj.jdbc.Driver");
-//			conexion = DriverManager.getConnection("jdbc:mysql://localhost/prueba", "root", "root");
 
-			// 1.4 Main
-			conexionMySQL = dataSource.getConnection();
-			System.out.println("> Conexión establecida correctamente");
-		} catch (SQLException | IOException e) {
-			System.err.println("> Error al conectar con mysql: " + e.getMessage());
-		}
-	}
-	
-	public static DBConnection getInstance() {
-		if (instance == null) {
-			instance = new DBConnection();
-		}
-		return instance;
-	}
-	
-	public static Connection getConnection() {
-		return instance.conexionMySQL;
-	}
+            // Probar la conexión al inicializar
+            try (Connection conn = dataSource.getConnection()) {
+                System.out.println("> Conexión establecida correctamente");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al inicializar la conexión a la base de datos: " + e.getMessage());
+        }
+    }
+
+    // Singleton
+    public static DBConnection getInstance() {
+        if (instance == null) {
+            instance = new DBConnection();
+        }
+        return instance;
+    }
+
+    // Devuelve una nueva conexión
+    public static Connection getConnection() throws SQLException {
+        if (dataSource == null) {
+            throw new SQLException("DataSource no inicializado. Revisa la configuración de la base de datos.");
+        }
+        return dataSource.getConnection();
+    }
 }
+
+
+

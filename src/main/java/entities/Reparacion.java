@@ -1,87 +1,74 @@
 package entities;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 public class Reparacion {
 
-	private int id_reparacion;
-	private String descripcion;
-	private Date fechaEntrada;
-	private double costeEstimado;
-	private Estado estado;
-	
-	
-	public Reparacion(int id_reparacion, String descripcion, Date fechaEntrega, double costeEstimado, Estado estado) {
-		super();
-		this.id_reparacion = id_reparacion;
-		this.descripcion = descripcion;
-		this.fechaEntrada = fechaEntrega;
-		this.costeEstimado = costeEstimado;
-		this.estado = estado;
-	}
+    private String matriculaV; 
+    private String descripcion;
+    private Date fechaEntrada;
+    private double costeEstimado;
+    private Estado estado;
 
+    
+    public Reparacion(String matriculaV, String descripcion, Date fechaEntrada, double costeEstimado, Estado estado) {
+        this.matriculaV = matriculaV;
+        this.descripcion = descripcion;
+        this.fechaEntrada = fechaEntrada;
+        this.costeEstimado = costeEstimado;
+        this.estado = estado;
+    }
 
+ 
+  
+    public String getMatriculaV() {
+        return matriculaV;
+    }
 
+    public void setMatriculaV(String matriculaV) {
+        this.matriculaV = matriculaV;
+    }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public int getId_reparacion() {
-		return id_reparacion;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
+    public Date getFechaEntrada() {
+        return fechaEntrada;
+    }
 
-	public void setId_reparacion(int id_reparacion) {
-		this.id_reparacion = id_reparacion;
-	}
+    public void setFechaEntrada(Date fechaEntrada) {
+        this.fechaEntrada = fechaEntrada;
+    }
 
+    public double getCosteEstimado() {
+        return costeEstimado;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public void setCosteEstimado(double costeEstimado) {
+        this.costeEstimado = costeEstimado;
+    }
 
+    public Estado getEstado() {
+        return estado;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
 
-
-	public Date getFechaEntrega() {
-		return fechaEntrada;
-	}
-
-
-	public void setFechaEntrega(Date fechaEntrega) {
-		this.fechaEntrada = fechaEntrega;
-	}
-
-
-	public double getCosteEstimado() {
-		return costeEstimado;
-	}
-
-
-	public void setCosteEstimado(double costeEstimado) {
-		this.costeEstimado = costeEstimado;
-	}
-
-
-	public Estado getEstado() {
-		return estado;
-	}
-
-
-	public void setEstado(Estado estado) {
-		this.estado = estado;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Reparacion [id_reparacion=" + id_reparacion + ", descripcion=" + descripcion + ", fechaEntrada="
-				+ fechaEntrada + ", costeEstimado=" + costeEstimado + ", estado=" + estado + "]";
-	}
-	
-	
-	
-	
+    @Override
+    public String toString() {
+        return "Reparacion: matricula= " + matriculaV 
+                + ", descripcion= " + descripcion
+                + ", fechaEntrada= " + fechaEntrada
+                + ", costeEstimado= " + costeEstimado
+                + ", estado= " + estado + ".";
+    }
 }
+
+

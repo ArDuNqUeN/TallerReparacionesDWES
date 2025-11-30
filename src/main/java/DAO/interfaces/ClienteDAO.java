@@ -1,17 +1,15 @@
 package DAO.interfaces;
 
 import java.util.List;
-
 import entities.Cliente;
 
 public interface ClienteDAO {
     boolean insertarCliente(Cliente c);
-    Cliente obtenerClientePorId(int id);
+    Cliente obtenerClientePorDni(String dni);
     List<Cliente> obtenerTodos();
     boolean actualizarCliente(Cliente c);
-    boolean eliminarCliente(int id);
+    boolean eliminarCliente(String dni);
 }
-
-              
+   
 	
 

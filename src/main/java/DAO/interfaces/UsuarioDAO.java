@@ -1,15 +1,14 @@
 package DAO.interfaces;
 
 import java.util.List;
-
 import entities.Usuario;
 
 public interface UsuarioDAO {
-    int insertarUsuario(Usuario usuario);
-    Usuario obtenerUsuarioPorId(int id);
+    boolean insertarUsuario(Usuario usuario);
+    Usuario obtenerUsuarioPorDni(String dni);
     List<Usuario> obtenerTodos();
     boolean actualizarUsuario(Usuario usuario);
-    boolean eliminarUsuario(int id);
+    boolean eliminarUsuario(String dni);
     Usuario login(String nombre, String contrasena);
 }
 

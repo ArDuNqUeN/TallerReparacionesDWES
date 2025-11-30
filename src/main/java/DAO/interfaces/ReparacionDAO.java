@@ -1,14 +1,24 @@
 package DAO.interfaces;
 
 import java.util.List;
-
+import entities.Estado;
 import entities.Reparacion;
 
 public interface ReparacionDAO {
+
     boolean insertarReparacion(Reparacion reparacion);
-    Reparacion obtenerReparacionPorId(int id);
+
     List<Reparacion> obtenerTodas();
-    boolean actualizarReparacion(Reparacion reparacion);
-    boolean eliminarReparacion(int id);
-    boolean cambiarEstado(int id, Reparacion.Estado estado);
+
+    // Obtener reparaciones por matrícula del vehículo
+    List<Reparacion> obtenerReparacionPorMatricula(String matricula);
+
+    // Obtener reparaciones por DNI del cliente
+    List<Reparacion> obtenerReparacionPorDni(String dniCliente);
+
+    boolean actualizarReparacion(Reparacion reparacion, String matricula);
+
+    boolean eliminarReparacion(String matricula);
+
+    boolean cambiarEstado(int filaId, Estado nuevoEstado);
 }

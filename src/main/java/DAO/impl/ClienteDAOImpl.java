@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,117 +11,114 @@ import DAO.DBConnection;
 import DAO.interfaces.ClienteDAO;
 import entities.Cliente;
 
-public class ClienteDAOImpl implements ClienteDAO{
-	
-	
-	 // INSERTAR CLIENTE
+public class ClienteDAOImpl implements ClienteDAO {
+
+    // INSERTAR CLIENTE
+    @Override
     public boolean insertarCliente(Cliente cliente) {
-        String sql = "INSERT INTO cliente (nombre, telefono, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO cliente (nombre, email, dni) VALUES (?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, cliente.getId_cliente());
-            stmt.setString(2, cliente.getNombre());
-            stmt.setString(3, cliente.getEmail());
-            stmt.setString(4, cliente.getDni());
+            stmt.setString(1, cliente.getNombre());
+            stmt.setString(2, cliente.getEmail());
+            stmt.setString(3, cliente.getDni());
 
-            int filas = stmt.executeUpdate();
-            return filas > 0;
+            return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error insertando cliente: " + e.getMessage());
+            System.err.println("Error insertando cliente: " + e.getMessage());
             return false;
         }
     }
 
-    // BUSCAR CLIENTE POR ID
-    public Cliente obtenerClientePorId(int id) {
-        String sql = "SELECT * FROM cliente WHERE id = ?";
+    // OBTENER CLIENTE POR DNI
+    @Override
+    public Cliente obtenerClientePorDni(String dni) {
+        String sql = "SELECT * FROM cliente WHERE dni=?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            stmt.setString(1, dni);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 return new Cliente(
-                        rs.getInt("id"),
                         rs.getString("nombre"),
-                        rs.getString("telefono"),
-                        rs.getString("email")
+                        rs.getString("email"),
+                        rs.getString("dni")
                 );
             }
 
         } catch (SQLException e) {
-            System.out.println("Error buscando cliente: " + e.getMessage());
+            System.err.println("Error buscando cliente: " + e.getMessage());
         }
 
         return null;
     }
 
     // LISTAR TODOS LOS CLIENTES
+    @Override
     public List<Cliente> obtenerTodos() {
         List<Cliente> clientes = new ArrayList<>();
         String sql = "SELECT * FROM cliente";
 
         try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 clientes.add(new Cliente(
-                        rs.getInt("id"),
                         rs.getString("nombre"),
-                        rs.getString("telefono"),
-                        rs.getString("email")
+                        rs.getString("email"),
+                        rs.getString("dni")
                 ));
             }
 
         } catch (SQLException e) {
-            System.out.println("Error listando clientes: " + e.getMessage());
+            System.err.println("Error listando clientes: " + e.getMessage());
         }
 
         return clientes;
     }
 
     // ACTUALIZAR CLIENTE
+    @Override
     public boolean actualizarCliente(Cliente cliente) {
-        String sql = "UPDATE cliente SET nombre=?, telefono=?, email=? WHERE id=?";
+        String sql = "UPDATE cliente SET nombre=?, email=? WHERE dni=?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        	 	stmt.setInt(1, cliente.getId_cliente());
-	            stmt.setString(2, cliente.getNombre());
-	            stmt.setString(3, cliente.getEmail());
-	            stmt.setString(4, cliente.getDni());
+            stmt.setString(1, cliente.getNombre());
+            stmt.setString(2, cliente.getEmail());
+            stmt.setString(3, cliente.getDni());
 
-            int filas = stmt.executeUpdate();
-            return filas > 0;
+            return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error actualizando cliente: " + e.getMessage());
+            System.err.println("Error actualizando cliente: " + e.getMessage());
             return false;
         }
     }
 
     // ELIMINAR CLIENTE
-    public boolean eliminarCliente(int id) {
-        String sql = "DELETE FROM cliente WHERE id=?";
+    @Override
+    public boolean eliminarCliente(String dni) {
+        String sql = "DELETE FROM cliente WHERE dni=?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
-
-            int filas = stmt.executeUpdate();
-            return filas > 0;
+            stmt.setString(1, dni);
+            return stmt.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            System.out.println("Error eliminando cliente: " + e.getMessage());
+            System.err.println("Error eliminando cliente: " + e.getMessage());
             return false;
         }
     }
 }
+
