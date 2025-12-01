@@ -3,6 +3,7 @@ A continuación se incluye el script SQL necesario para crear y configurar la ba
 
 
 -- CREA BD
+
 DROP DATABASE tallerreparaciones;
 CREATE DATABASE IF NOT EXISTS tallerreparaciones;
 USE tallerreparaciones;
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS cliente (
 );
 
 -- TABLA VEHICULO
+
 CREATE TABLE IF NOT EXISTS vehiculo (
     matricula VARCHAR(10) PRIMARY KEY,           
     marca VARCHAR(50) NOT NULL,
@@ -24,6 +26,7 @@ CREATE TABLE IF NOT EXISTS vehiculo (
 );
 
 -- TABLA USUARIO
+
 CREATE TABLE IF NOT EXISTS usuario (
     dniUsuario VARCHAR(9) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
@@ -32,6 +35,7 @@ CREATE TABLE IF NOT EXISTS usuario (
 );
 
 -- TABLA REPARACIONES
+
 CREATE TABLE IF NOT EXISTS reparaciones (
     id INT PRIMARY KEY AUTO_INCREMENT,
     matricula VARCHAR(10) NOT NULL,
@@ -43,6 +47,7 @@ CREATE TABLE IF NOT EXISTS reparaciones (
 );
 
 -- INSERTAR DATOS INICIALES
+
 INSERT INTO usuario (dniUsuario, nombre, contrasena, rol) VALUES 
 ('11111111A', 'Administrador', 'admin123', 'ADMIN'),
 ('22222222B', 'Mecanico1', 'meca123', 'MECANICO');
