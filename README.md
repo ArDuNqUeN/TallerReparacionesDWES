@@ -8,12 +8,14 @@ DROP DATABASE tallerreparaciones;
 CREATE DATABASE IF NOT EXISTS tallerreparaciones;
 USE tallerreparaciones;
 
+
 -- TABLA CLIENTE
+
 CREATE TABLE IF NOT EXISTS cliente (
     dni VARCHAR(9) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
-    email VARCHAR(50)
-);
+    email VARCHAR(50));
+
 
 -- TABLA VEHICULO
 
@@ -22,8 +24,8 @@ CREATE TABLE IF NOT EXISTS vehiculo (
     marca VARCHAR(50) NOT NULL,
     modelo VARCHAR(50) NOT NULL,
     dni_cliente VARCHAR(9) NOT NULL,             
-    FOREIGN KEY (dni_cliente) REFERENCES cliente(dni)
-);
+    FOREIGN KEY (dni_cliente) REFERENCES cliente(dni));
+
 
 -- TABLA USUARIO
 
@@ -31,8 +33,8 @@ CREATE TABLE IF NOT EXISTS usuario (
     dniUsuario VARCHAR(9) PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     contrasena VARCHAR(50) NOT NULL,
-    rol VARCHAR(10) NOT NULL
-);
+    rol VARCHAR(10) NOT NULL);
+
 
 -- TABLA REPARACIONES
 
@@ -43,8 +45,8 @@ CREATE TABLE IF NOT EXISTS reparaciones (
     fechaEntrada DATE NOT NULL,
     costeEstimado DOUBLE NOT NULL,
     estado VARCHAR(20) NOT NULL,
-    FOREIGN KEY (matricula) REFERENCES vehiculo(matricula)
-);
+    FOREIGN KEY (matricula) REFERENCES vehiculo(matricula));
+
 
 -- INSERTAR DATOS INICIALES
 
