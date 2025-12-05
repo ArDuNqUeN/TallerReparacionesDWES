@@ -1,0 +1,62 @@
+A continuación se incluye el script SQL necesario para crear y configurar la base de datos utilizada por la aplicación. Este script crea las tablas, define las relaciones y, opcionalmente, inserta datos iniciales para poder probar la aplicación.
+
+
+
+-- CREA BD
+
+DROP DATABASE tallerreparaciones;
+CREATE DATABASE IF NOT EXISTS tallerreparaciones;
+USE tallerreparaciones;
+
+
+-- TABLA CLIENTE
+
+CREATE TABLE IF NOT EXISTS cliente (
+    dni VARCHAR(9) PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    email VARCHAR(50));
+
+
+-- TABLA VEHICULO
+
+CREATE TABLE IF NOT EXISTS vehiculo (
+    matricula VARCHAR(10) PRIMARY KEY,           
+    marca VARCHAR(50) NOT NULL,
+    modelo VARCHAR(50) NOT NULL,
+    dni_cliente VARCHAR(9) NOT NULL,             
+    FOREIGN KEY (dni_cliente) REFERENCES cliente(dni));
+
+
+-- TABLA USUARIO
+
+CREATE TABLE IF NOT EXISTS usuario (
+    dniUsuario VARCHAR(9) PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    contrasena VARCHAR(50) NOT NULL,
+    rol VARCHAR(10) NOT NULL);
+
+
+-- TABLA REPARACIONES
+
+CREATE TABLE IF NOT EXISTS reparaciones (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    matricula VARCHAR(10) NOT NULL,
+    descripcion VARCHAR(255) NOT NULL,
+    fechaEntrada DATE NOT NULL,
+    costeEstimado DOUBLE NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    FOREIGN KEY (matricula) REFERENCES vehiculo(matricula));
+
+
+-- INSERTAR DATOS INICIALES
+
+INSERT INTO usuario (dniUsuario, nombre, contrasena, rol) VALUES 
+('11111111A', 'Administrador', 'admin123', 'ADMIN'),
+('22222222B', 'Mecanico1', 'meca123', 'MECANICO');
+
+INSERT INTO cliente (dni, nombre, email) VALUES ('12345678Z', 'Cliente Prueba', 'cliente@prueba.com');
+INSERT INTO vehiculo (matricula, marca, modelo, dni_cliente) VALUES ('1234ABC', 'Toyota', 'Corolla', '12345678Z');
+
+INSERT INTO reparaciones (matricula, descripcion, fechaEntrada, costeEstimado, estado) VALUES
+('1234ABC', 'Cambio de aceite', '2025-11-30', 50, 'FINALIZADA');
+
